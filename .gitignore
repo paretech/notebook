@@ -60,6 +60,19 @@ instance/
 # Scrapy stuff:
 .scrapy
 
+# VirtualEnv stuff:
+.Python 
+[Bb]in 
+[Ii]nclude
+[Ll]ib
+[Ll]ib64
+[Ll]ocal
+[Ss]cripts
+[Tt]cl
+pyvenv.cfg
+.venv
+pip-selfcheck.json
+
 # Sphinx documentation
 docs/_build/
 
