@@ -9,6 +9,7 @@ script:
   - set -e
   - cd docs
   - make html
-  - doctr deploy
+  - doctr deploy .
+
 
 
