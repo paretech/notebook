@@ -1,0 +1,14 @@
+sudo: false
+env:
+  global:
+    - secure: "SYLdPpVRqDBNBDg7qw+fsiki4keXKg9MTgdM5ThRv3xb1x3oG3JqVIjY7K397fpN0clIP+gENI4VmJDOGxNdJ1qjoJqHe5hO6czbG0zUJ2zL4ifoo5Jc7NCmAhdI/sCrh2b3k9w0SwpJ4N6n/5vNDFUEj54sx9MiBltmL5z7ksd7Xihc8lbJq2/w/PrOVd00AOkLc6DIZDqszSZ8ReM0hYbhh4vn+lNqkN6Teojy44Ti9qgyXrnKQeRweJUf8rHfdb0c/9rEx7MxW5E1suPnVx5DiXc4Flun57D2NG8PucJjG7j3KzYFybs3VcfXmjWzKbcy+IACQCKCpJYrGauUFsDDoRPheM1SBiXEsFgWST1wN9aYJ51xBJSgIIDxjjHxgmX56BYWz/dG4oNL1jxQlRjw3obkiZpjE5kjuGYpnOxyWDa0cqAo5MKPwiCMoXDXEuAnoU++6udl2g31oL9IeHwN/K9mqG7//SdcUrp/U6/9iT0mPxfnf7YDbPWyee5YB5Us3cS+S68H3mDJzta34syBKCDMPjWoxTWe/MAmLJCLXjqutHbtZroO+36haossdRo9u3wd4vyOI+cwejxOD0pu3qfMdyrSh/0Tm1m9acCugR7SL4vtdlVtd+6aEbl8/1YKh7guTKw0uK53U77omImcwJjRbY+HAT6VJU+Yb9o="
+language: python
+python: 3.6
+install: "pip install --requirements requirements.txt"
+script:
+  - set -e
+  - cd docs
+  - make html
+  - doctr deploy
+
+
