@@ -10,5 +10,7 @@ script:
   - cd docs
   - make html
   - doctr deploy . --built-docs _build
+doctr:
+  key-path: github_deploy_key.enc
 
 
