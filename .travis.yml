@@ -12,6 +12,6 @@ script:
   - cd ..
   - pwd
   - ls -la
-  - doctr deploy . --built-docs _build
+  - doctr deploy . --built-docs docs/_build
 
 
