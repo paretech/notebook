@@ -10,8 +10,6 @@ script:
   - cd docs
   - make html
   - cd ..
-  - pwd
-  - ls -la
-  - doctr deploy . --built-docs docs/_build
+  - doctr deploy --built-docs docs/_build/html docs
 
 
