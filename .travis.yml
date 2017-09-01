@@ -9,10 +9,9 @@ script:
   - set -e
   - cd docs
   - make html
+  - cd ..
   - pwd
   - ls -la
   - doctr deploy . --built-docs _build
-doctr:
-  key-path: key.enc
 
 
