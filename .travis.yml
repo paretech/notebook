@@ -9,8 +9,10 @@ script:
   - set -e
   - cd docs
   - make html
+  - pwd
+  - ls -la
   - doctr deploy . --built-docs _build
 doctr:
-  key-path: github_deploy_key.enc
+  key-path: key.enc
 
 
