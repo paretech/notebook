@@ -1,0 +1,230 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Arch Linux &#8212; Paretech Notebook  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="arch-linux">
+<h1>Arch Linux<a class="headerlink" href="#arch-linux" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="to-do-list">
+<h2>TO-DO List<a class="headerlink" href="#to-do-list" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Restore laptop image to VM</li>
+<li>Install Printer</li>
+<li>Install and configure RAID</li>
+<li>Sound Proxy</li>
+<li>Dotfile Management</li>
+<li>Font management</li>
+<li>Spotify Client</li>
+<li>xrandr dual monitor configuration</li>
+<li>i3-WM configuration files</li>
+<li>terminal color theme</li>
+<li>sublime text</li>
+<li>Install (and share) printer</li>
+<li>System Fonts</li>
+<li>Syslinux linux and configure mkinitcpio</li>
+<li>timezone</li>
+<li>install virtualbox</li>
+<li>i3 dmenu customization</li>
+<li>pycharm</li>
+<li>timezone (locale)</li>
+<li>Alt+Tab i3 module to return to previous focus</li>
+<li>Media buttons for volume control and song control.</li>
+<li>Switch from SYSLINUX to EFISTUB</li>
+<li>Implement Automatic copy of vmlinuz-linux to vmlinuz-linux on linux update.</li>
+<li>Need some simple redshift like program.</li>
+<li>alias ll=”ls -la –color=auto”</li>
+</ol>
+</div>
+<div class="section" id="initial-ramdisk-environment-mkinitcpio">
+<h2>Initial RAMDisk Environment (mkinitcpio)<a class="headerlink" href="#initial-ramdisk-environment-mkinitcpio" title="Permalink to this headline">¶</a></h2>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">Don’t take a kernel update if mkinitcpio is not sorted or if not ready to reboot immediately. System instability is likely to occur.</p>
+</div>
+<p>If using EFI boot system (as opposed to BIOS) then you must create an EFI System Partition. Arch documentation often refers to this partition as <code class="docutils literal"><span class="pre">esp</span></code>.</p>
+<p>After creating the EFI System Partition, you must choose how it will be mounted. The simplest option is to mount it at /boot or bind mount it to /boot since this allows pacman to directly update the kernel that the EFI firmware will read. If you elect for this option, continue to #Booting EFISTUB <a class="footnote-reference" href="#arch-efistub-systemd" id="id1">[3]</a>.</p>
+<p>Note: You can keep kernel and initramfs out of ESP if you use a boot manager which has a file system driver for the partition where they reside, e.g. rEFInd.</p>
+<p>mkinitcpio is the next generation of initramfs creation. mkinitcpio is a Bash script used to create an initial ramdisk environment <a class="footnote-reference" href="#arch-mkinitcpio" id="id2">[1]</a>.</p>
+<p>From the mkinitcpio(8):</p>
+<blockquote>
+<div>The initial ramdisk is in essence a very small environment (early userspace) which loads various kernel modules and sets up necessary things before handing over control to init. This makes it possible to have, for example, encrypted root file systems and root file systems on a software RAID array. mkinitcpio allows for easy extension with custom hooks, has autodetection at runtime, and many other features.</div></blockquote>
+<p>The kernel, once it is loaded, finds init in sbin and executes it. When init starts, it becomes the parent or grandparent of all of the processes that start up automatically on your Linux system. The first thing init does, is reading its initialization file, /etc/inittab. This instructs init to read an initial configuration script for the environment, which sets the path, starts swapping, checks the file systems, and so on. Basically, this step takes care of everything that your system needs to have done at system initialization: setting the clock, initializing serial ports and so forth <a class="footnote-reference" href="#tldp-boot-process" id="id3">[2]</a>.</p>
+<p>mkinitcpio is a modular tool for building an initramfs CPIO image <a class="footnote-reference" href="#arch-mkinitcpio" id="id4">[1]</a>. The ramdisk environment produced by mkinitcpio uses BusyBox for common UNIX utilities.</p>
+<p>By default, the mkinitcpio script generates two images after kernel installation or upgrades: a default image, and a fallback image that skips the autodetect hook thus including a full range of mostly-unneeded modules. This is accomplished via the preset files which most kernel packages install in /etc/mkinitcpio.d (e.g. /etc/mkinitcpio.d/linux.preset for linux).</p>
+<p>A preset is a predefined definition of how to create an initramfs image instead of specifying the configuration file and output file every time. The -p switch specifies a preset to utilize. For example, mkinitcpio -p linux selects the preset provided by the linux package.</p>
+<p>An additional configuration file is located at /etc/mkinitcpio.conf and is used to specify options global to all presets. The –allpresets switch specifies that all presets should be utilized when regenerating the initramfs after a mkinitcpio.conf change.</p>
+<p>Users may create any number of initramfs images with a variety of different configurations. The desired image must be specified in the respective boot loader configuration file.</p>
+<p>WARNING: Preset files are used to automatically regenerate the initramfs after a kernel update; be careful when editing them.</p>
+<dl class="docutils">
+<dt>There are a couple of options <a class="footnote-reference" href="#arch-efistub-systemd" id="id5">[3]</a>:</dt>
+<dd><ol class="first last arabic simple">
+<li>Blind mount <code class="docutils literal"><span class="pre">esp</span></code> to <code class="docutils literal"><span class="pre">/boot</span></code> so that the boot manager can access the kernel and intitramfs(s) (primary and fallback).</li>
+<li>Use a boot manager that has file system driver so that the kernel and initramfs can be accessed.</li>
+<li>Copy boot files (kernel and initramfs) to <code class="docutils literal"><span class="pre">esp</span></code> and use some other mechanism (systemd event triggers, mkinitcpio hook)to keep the files up to date as kernel updates become available.</li>
+</ol>
+</dd>
+</dl>
+<p>For now, a method of <code class="docutils literal"><span class="pre">mkinitcpio</span></code> hook is used that rights the boot files directly to <code class="docutils literal"><span class="pre">esp</span></code>.</p>
+<table class="docutils footnote" frame="void" id="arch-mkinitcpio" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[1]</td><td><em>(<a class="fn-backref" href="#id2">1</a>, <a class="fn-backref" href="#id4">2</a>)</em> <a class="reference external" href="https://wiki.archlinux.org/index.php/mkinitcpio">https://wiki.archlinux.org/index.php/mkinitcpio</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="tldp-boot-process" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id3">[2]</a></td><td><a class="reference external" href="http://www.tldp.org/LDP/intro-linux/html/sect_04_02.html">http://www.tldp.org/LDP/intro-linux/html/sect_04_02.html</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="arch-efistub-systemd" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id5">2</a>)</em> <a class="reference external" href="https://wiki.archlinux.org/index.php/EFISTUB#Using_systemd">https://wiki.archlinux.org/index.php/EFISTUB#Using_systemd</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="the-terminal">
+<h2>The Terminal<a class="headerlink" href="#the-terminal" title="Permalink to this headline">¶</a></h2>
+<p>After being frustrated with configuration of xterm looked into other terminals (urxvt, st). Ultimately settled on Termite after its high reviews, lauded as being ideal for tiling windows manager (WM) and VIM like nature. So far very happy. The config is managed via a text file and can be reloaded at runtime! All bit ++++!</p>
+<p>Slant.co has a nice comparison going on that was instrumental to discovering Termite! <a class="reference external" href="https://www.slant.co/versus/2445/2462/~xterm_vs_termite">https://www.slant.co/versus/2445/2462/~xterm_vs_termite</a></p>
+<p>Configuration instructions from Arch Termite page were more than enough to get started. Configured to usable point in minutes. Installed Anonymous FFT Font via pacman. See <code class="docutils literal"><span class="pre">pacman</span> <span class="pre">-Ss</span> <span class="pre">font</span></code> and <code class="docutils literal"><span class="pre">fc-list</span></code> to make obtaining and configuring fonts easier than past experiences. See also <code class="docutils literal"><span class="pre">`pacman</span> <span class="pre">-Ss</span> <span class="pre">font</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">-i</span> <span class="pre">mono</span> <span class="pre">-B</span> <span class="pre">1`</span></code>.</p>
+<p>After some experimentation, settled on Inconsolata. Though there are some odd renderings in Sublime Text-3. Does not appear to be maintaining monospace. In particular, the <code class="docutils literal"><span class="pre">y</span></code> appears to be colapsing and <code class="docutils literal"><span class="pre">J</span></code> is even worse….</p>
+</div>
+<div class="section" id="python-on-arch">
+<h2>Python on Arch<a class="headerlink" href="#python-on-arch" title="Permalink to this headline">¶</a></h2>
+<p>If you must use pip, use a virtual environment (python -m venv) or with pip install –user to avoid conflicting with packages in /usr. It is always preferred to use pacman to install software. To help keep your system managed as intended, do not even install python-pip via pacman to minimize accidental out venv package installs. Once a python venv environment is activated (source ./bin/activate) pip will be available in the local virtualized context.</p>
+</div>
+<div class="section" id="manual-sections">
+<h2>Manual Sections<a class="headerlink" href="#manual-sections" title="Permalink to this headline">¶</a></h2>
+<p>The number corresponds to what section of the manual that page is from; 1 is user commands, while 8 is sysadmin stuff. The man page for man itself (man man) explains it and lists the standard ones:</p>
+<dl class="docutils">
+<dt>MANUAL SECTIONS</dt>
+<dd><p class="first">The standard sections of the manual include:</p>
+<p>1      User Commands
+2      System Calls
+3      C Library Functions
+4      Devices and Special Files
+5      File Formats and Conventions
+6      Games et. al.
+7      Miscellanea
+8      System Administration tools and Daemons</p>
+<p class="last">Distributions customize the manual section to their specifics,
+which often include additional sections.</p>
+</dd>
+</dl>
+<p>Source: <a class="reference external" href="https://unix.stackexchange.com/questions/3586/what-do-the-numbers-in-a-man-page-mean">https://unix.stackexchange.com/questions/3586/what-do-the-numbers-in-a-man-page-mean</a></p>
+</div>
+<div class="section" id="customizing-the-terminal">
+<h2>Customizing the Terminal<a class="headerlink" href="#customizing-the-terminal" title="Permalink to this headline">¶</a></h2>
+<p>A nice and rather lengthing explanation <a class="reference external" href="http://www.futurile.net/2016/06/15/xterm-256color-themes-molokai-terminal-theme/">http://www.futurile.net/2016/06/15/xterm-256color-themes-molokai-terminal-theme/</a></p>
+<p>Coupled with <a class="reference external" href="https://wiki.archlinux.org/index.php/Xterm">https://wiki.archlinux.org/index.php/Xterm</a></p>
+</div>
+<div class="section" id="uefi-boot">
+<h2>UEFI Boot<a class="headerlink" href="#uefi-boot" title="Permalink to this headline">¶</a></h2>
+<p>Lots has been previously led, so much so that the information should be rested and sorted. Afterall, it’s hard to keep a journal in a sectioned document. Arch was initially installed using if <cite>/sys/firmware/efi</cite> exists, then the kernel has booted in EFI mode.</p>
+</div>
+<div class="section" id="a-new-beginning">
+<h2>A NEW Beginning<a class="headerlink" href="#a-new-beginning" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="printing">
+<h2>Printing<a class="headerlink" href="#printing" title="Permalink to this headline">¶</a></h2>
+<p>Adding print queue to CUPS:
+Device URI: hp:/usb/hp_LaserJet_1320_series?serial=00CNHC62Q0H1
+Queue name: HP_LASERJET_1320
+PPD file: lsb/usr/HP/hp-laserjet_1320-ps.ppd.gz
+Location: office
+Information:</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Paretech Notebook</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Matthew Pare.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/archlinux.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

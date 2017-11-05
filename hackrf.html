@@ -1,0 +1,183 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Starting from Scratch with the HackRF One! &#8212; Paretech Notebook  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="starting-from-scratch-with-the-hackrf-one">
+<h1>Starting from Scratch with the HackRF One!<a class="headerlink" href="#starting-from-scratch-with-the-hackrf-one" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>I was one of the original backers of the HackRF One radio. My order was fulfilled but for a variety of life reasons, I never really got into it.</p>
+<p>I recall long ago that I did update the firmware and that I was able to tune a local FM radio station. A couple years later and that sounds like a decent place to start up again.</p>
+<p>The following sections outline (perhaps detail) the process targeted for an Arch Linux Environment.</p>
+<p>As of 2017-11-02, the latest HackRF “release” was 2017-02-01 and the last commit was on 2017-09-29. Are these facts signs of a mature platform or a loss of interest? Signal processing is cool and all…</p>
+<p>Installation:</p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ pacman -S hackrf
+$ hackrf_info
+
+hackrf_info version: <span class="m">2017</span>.02.1
+libhackrf version: <span class="m">2017</span>.02.1 <span class="o">(</span><span class="m">0</span>.5<span class="o">)</span>
+Found HackRF
+Index: <span class="m">0</span>
+Serial number: 0000000000000000457863c825391b1f
+Board ID Number: <span class="m">2</span> <span class="o">(</span>HackRF One<span class="o">)</span>
+Firmware Version: <span class="m">2015</span>.07.2 <span class="o">(</span>API:1.00<span class="o">)</span>
+Part ID Number: 0xa000cb3c 0x007d4f44
+</pre></div>
+</div>
+<p>Follow instructions for updating HackRF Firmware <a class="footnote-reference" href="#hackrf-upfirmware" id="id1">[1]</a>. When download latest release, us <cite>tar -xJf &lt;if&gt;</cite> to extract if <a href="#id2"><span class="problematic" id="id3">*</span></a>.tar.xz. All lights with exception of RX and TX are on and steady.’‘</p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>$ hackrf_info
+
+hackrf_info version: <span class="m">2017</span>.02.1
+libhackrf version: <span class="m">2017</span>.02.1 <span class="o">(</span><span class="m">0</span>.5<span class="o">)</span>
+Found HackRF
+Index: <span class="m">0</span>
+Serial number: 0000000000000000457863c825391b1f
+Board ID Number: <span class="m">2</span> <span class="o">(</span>HackRF One<span class="o">)</span>
+Firmware Version: <span class="m">2017</span>.02.1 <span class="o">(</span>API:1.02<span class="o">)</span>
+Part ID Number: 0xa000cb3c 0x007d4f44
+</pre></div>
+</div>
+<p>Install some more software…’‘</p>
+<div class="highlight-sh"><div class="highlight"><pre><span></span>pacman -S gnuradio gnuradio-osmosdr
+pacman -S gnuradio-companion
+</pre></div>
+</div>
+<p>Trying to run the example FM Radio Receiver [hackrf_gettingstarted]. The resulting window is displaying samples and the HackRF appears to be operating in RF mode. These are both good and healthy signs. Even better, when using an appropriate antenna and tuning to a strong station even get decent sounding audio. Note if sound is not heard there is a fair bit of information on the subject [gnur_ALSAPulseAudio].</p>
+<table class="docutils footnote" frame="void" id="hackrf-upfirmware" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://github.com/mossmann/hackrf/wiki/Updating-Firmware">https://github.com/mossmann/hackrf/wiki/Updating-Firmware</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="hackrf-gettingstarted" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[2]</td><td><a class="reference external" href="https://github.com/mossmann/hackrf/wiki/Getting-Started-with-HackRF-and-GNU-Radio">https://github.com/mossmann/hackrf/wiki/Getting-Started-with-HackRF-and-GNU-Radio</a></td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="gnur-alsapulseaudio" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label">[3]</td><td><a class="reference external" href="https://wiki.gnuradio.org/index.php/ALSAPulseAudio">https://wiki.gnuradio.org/index.php/ALSAPulseAudio</a></td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="resources">
+<h2>Resources<a class="headerlink" href="#resources" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="https://github.com/mossmann/hackrf/wiki/Getting-Started-with-HackRF-and-GNU-Radio">https://github.com/mossmann/hackrf/wiki/Getting-Started-with-HackRF-and-GNU-Radio</a></li>
+<li><a class="reference external" href="https://wiki.archlinux.org/index.php/GNU_Radio">https://wiki.archlinux.org/index.php/GNU_Radio</a></li>
+<li><a class="reference external" href="https://github.com/mossmann/hackrf">https://github.com/mossmann/hackrf</a></li>
+<li><a class="reference external" href="https://github.com/mossmann/hackrf/wiki/Operating-System-Tips">https://github.com/mossmann/hackrf/wiki/Operating-System-Tips</a></li>
+<li><a class="reference external" href="http://hackrfblue.com/getting-started/">http://hackrfblue.com/getting-started/</a></li>
+</ol>
+</div>
+<div class="section" id="additional-reading">
+<h2>Additional Reading<a class="headerlink" href="#additional-reading" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://greatscottgadgets.com/sdr/">http://greatscottgadgets.com/sdr/</a></li>
+<li><a class="reference external" href="https://github.com/mossmann/hackrf/wiki/Software-with-HackRF-Support">https://github.com/mossmann/hackrf/wiki/Software-with-HackRF-Support</a></li>
+<li><a class="reference external" href="https://github.com/jopohl/urh">https://github.com/jopohl/urh</a></li>
+<li><a class="reference external" href="http://zadig.akeo.ie/">http://zadig.akeo.ie/</a></li>
+<li><a class="reference external" href="https://grymoire.wordpress.com">https://grymoire.wordpress.com</a></li>
+<li><a class="reference external" href="http://www.briandorey.com">http://www.briandorey.com</a></li>
+<li><a class="reference external" href="http://www.briandorey.com">http://www.briandorey.com</a></li>
+<li><a class="reference external" href="https://www.mouser.com/Search/ProductDetail.aspx?qs=y9%2FpVxnqej94SfQhw%252bqKcA%3D%3D">https://www.mouser.com/Search/ProductDetail.aspx?qs=y9%2FpVxnqej94SfQhw%252bqKcA%3D%3D</a></li>
+<li><a class="reference external" href="http://dangerousprototypes.com/blog/tag/hackrf/">http://dangerousprototypes.com/blog/tag/hackrf/</a></li>
+<li><a class="reference external" href="https://z4ziggy.wordpress.com/2015/05/17/sniffing-gsm-traffic-with-hackrf/">https://z4ziggy.wordpress.com/2015/05/17/sniffing-gsm-traffic-with-hackrf/</a></li>
+<li><a class="reference external" href="https://github.com/scateu/kalibrate-hackrf">https://github.com/scateu/kalibrate-hackrf</a></li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Paretech Notebook</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Matthew Pare.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/hackrf.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

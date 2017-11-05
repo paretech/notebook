@@ -1,4 +1,9 @@
+./_sources/archlinux.rst.txt
+./_sources/hackrf.rst.txt
 ./_sources/index.rst.txt
+./_sources/keyboard.rst.txt
+./_sources/sphinx.rst.txt
+./_sources/telosb.rst.txt
 ./_static/ajax-loader.gif
 ./_static/alabaster.css
 ./_static/basic.css
@@ -21,8 +26,13 @@
 ./_static/up-pressed.png
 ./_static/up.png
 ./_static/websupport.js
+./archlinux.html
 ./genindex.html
+./hackrf.html
 ./index.html
+./keyboard.html
 ./objects.inv
 ./search.html
 ./searchindex.js
+./sphinx.html
+./telosb.html

@@ -1,0 +1,178 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>So I have 400 TelosB’s, Now What? &#8212; Paretech Notebook  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="so-i-have-400-telosb-s-now-what">
+<h1>So I have 400 TelosB’s, Now What?<a class="headerlink" href="#so-i-have-400-telosb-s-now-what" title="Permalink to this headline">¶</a></h1>
+<p>So you remember Travis Goodspeed right? Well, I have about 400 MSP430 boards called TelosB that should be in his hands… Hamvention 2017…</p>
+<p><a class="reference external" href="http://goodfet.sourceforge.net/hardware/telosb/">http://goodfet.sourceforge.net/hardware/telosb/</a></p>
+<p>Install binutils-msp4340, gcc-msp430, msp430-libc, and msp430mcu from AUR (abdullatif).</p>
+<p>..code-block:: sh</p>
+<blockquote>
+<div><p>pacman -S mspgcc
+pacman -S binutils-msp430
+pacman -U binutils-msp430-2.21.1a-1-x86_64.pkg.tar.xz
+pacman -U gcc-msp430-4.6.3-1-x86_64.pkg.tar.xz
+pacman -U msp430-libc-20120224-1-x86_64.pkg.tar.xz
+pacman -U msp430mcu-20120406-1-any.pkg.tar.xz</p>
+<p>clone <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:travisgoodspeed/goodfet.git</p>
+<p>cd goodfet/firmware
+export board=telosb
+make clean all</p>
+<p>../client/goodfet.bsl –telosb -c /dev/ttyUSB0 -r -e -I -p goodfet.hex</p>
+</div></blockquote>
+<p>If all went well well there should now be a <cite>goodfet.hex</cite> file. Bad news is the goodfet bootstrap loader (BSL) responds with BSL Exception “NAK received (wrong password?)”. For now that’s okay as our good friend &#64;rho in Texas let us know that the RIOT-OS bootloader appears to work just fine.</p>
+<p>..code-block:: sh</p>
+<blockquote>
+<div><p>git clone <a class="reference external" href="mailto:git&#37;&#52;&#48;github&#46;com">git<span>&#64;</span>github<span>&#46;</span>com</a>:RIOT-OS/RIOT.git</p>
+<p>./RIOT/dist/tools/goodfet/goodfet.bsl –telosb -c /dev/ttyUSB0 -r -e -I -p goodfet/firmware/goodfet.hex
+MSP430 Bootstrap Loader Version: 1.39-goodfet-8
+Mass Erase…
+Transmit default password …
+Invoking BSL…
+Transmit default password …
+Current bootstrap loader version: 1.61 (Device ID: f16c)
+Changing baudrate to 38400 …
+Program …
+9170 bytes programmed.
+Reset device …</p>
+</div></blockquote>
+<p>Sweet!</p>
+<p>..code-block:: sh</p>
+<blockquote>
+<div><p># pacman -S virtualenv2</p>
+<p>$ cd goodfet
+$ virtualenv2 venv
+$ source venv/bin/activate
+$ pip install pyserial</p>
+<p>$ /dev/ttyUSB0
+Found   CC2420
+Freq:   2405.000000 MHz
+Status:
+(venv) [<a class="reference external" href="mailto:paretech&#37;&#52;&#48;osprey">paretech<span>&#64;</span>osprey</a> goodfet]$ ./client/goodfet.spiflash info
+Ident as MISSING M25P80
+Manufacturer: ff MISSING
+Type: ff
+Capacity: ff (1048576 bytes)</p>
+<p>$ ./client/goodfet.ccspi info
+ON: /dev/ttyUSB0
+Found   CC2420
+Freq:   2405.000000 MHz
+Status:</p>
+</div></blockquote>
+<p>So what does this all mean? Well there is work to be done on the BSL loader that comes with goodfet but that from RIOT is immediately useful. Also, the goodfet firmware was successfully built, the goodfet client executes and is able to query the telosb hardware. Note too shabby for a few minutes of work! Some notes were even made in the process! Good job…</p>
+<p>It’s kind of interesting, the goodfet, TinyOS, and RIOT-OS all appear to be using some variation of the same BSL. They all look like really terrible python… However, the BSL from both TinyOS and RIOT-OS appear to work!</p>
+<div class="section" id="references">
+<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li><a class="reference external" href="http://www2.ece.ohio-state.edu/~bibyk/ee582/telosMote.pdf">http://www2.ece.ohio-state.edu/~bibyk/ee582/telosMote.pdf</a></li>
+<li><a class="reference external" href="https://github.com/travisgoodspeed/goodfet">https://github.com/travisgoodspeed/goodfet</a></li>
+<li><a class="reference external" href="http://goodfet.sourceforge.net/hardware/telosb/">http://goodfet.sourceforge.net/hardware/telosb/</a></li>
+<li><a class="reference external" href="https://github.com/RIOT-OS/RIOT">https://github.com/RIOT-OS/RIOT</a></li>
+<li><a class="reference external" href="https://riot-os.org/">https://riot-os.org/</a></li>
+<li><a class="reference external" href="https://github.com/tinyos/tinyos-main">https://github.com/tinyos/tinyos-main</a></li>
+<li><a class="reference external" href="http://tinyos.net/">http://tinyos.net/</a></li>
+<li><a class="reference external" href="http://travisgoodspeed.blogspot.com/2011/03/goodfet-on-telosb-tmote-sky.html">http://travisgoodspeed.blogspot.com/2011/03/goodfet-on-telosb-tmote-sky.html</a></li>
+<li><a class="reference external" href="http://www.pages.drexel.edu/~kws23/tutorials/motes/motes.html">http://www.pages.drexel.edu/~kws23/tutorials/motes/motes.html</a></li>
+</ol>
+</div>
+<div class="section" id="the-next-chapter">
+<h2>The Next Chapter<a class="headerlink" href="#the-next-chapter" title="Permalink to this headline">¶</a></h2>
+<ol class="arabic simple">
+<li>Get to TelosB’s talking with each other</li>
+<li>Write a TelosB only BSL in Python3 (not Python2).</li>
+</ol>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Paretech Notebook</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Matthew Pare.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/telosb.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
