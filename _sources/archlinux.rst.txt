@@ -36,8 +36,8 @@ Initial RAMDisk Environment (mkinitcpio)
 ============================
 
 .. WARNING::
-	Don't take a kernel update if mkinitcpio is not sorted or if not ready to reboot immediately. System instability is likely to occur. 
-	
+	Don't take a kernel update if mkinitcpio is not sorted or if not ready to reboot immediately. System instability is likely to occur.
+
 If using EFI boot system (as opposed to BIOS) then you must create an EFI System Partition. Arch documentation often refers to this partition as ``esp``.
 
 After creating the EFI System Partition, you must choose how it will be mounted. The simplest option is to mount it at /boot or bind mount it to /boot since this allows pacman to directly update the kernel that the EFI firmware will read. If you elect for this option, continue to #Booting EFISTUB [#arch_efistub_systemd]_.
@@ -45,7 +45,7 @@ After creating the EFI System Partition, you must choose how it will be mounted.
 Note: You can keep kernel and initramfs out of ESP if you use a boot manager which has a file system driver for the partition where they reside, e.g. rEFInd.
 
 
-mkinitcpio is the next generation of initramfs creation. mkinitcpio is a Bash script used to create an initial ramdisk environment [#arch_mkinitcpio]_. 
+mkinitcpio is the next generation of initramfs creation. mkinitcpio is a Bash script used to create an initial ramdisk environment [#arch_mkinitcpio]_.
 
 From the mkinitcpio(8):
 
@@ -55,13 +55,13 @@ The kernel, once it is loaded, finds init in sbin and executes it. When init sta
 
 mkinitcpio is a modular tool for building an initramfs CPIO image [#arch_mkinitcpio]_. The ramdisk environment produced by mkinitcpio uses BusyBox for common UNIX utilities.
 
-By default, the mkinitcpio script generates two images after kernel installation or upgrades: a default image, and a fallback image that skips the autodetect hook thus including a full range of mostly-unneeded modules. This is accomplished via the preset files which most kernel packages install in /etc/mkinitcpio.d (e.g. /etc/mkinitcpio.d/linux.preset for linux). 
+By default, the mkinitcpio script generates two images after kernel installation or upgrades: a default image, and a fallback image that skips the autodetect hook thus including a full range of mostly-unneeded modules. This is accomplished via the preset files which most kernel packages install in /etc/mkinitcpio.d (e.g. /etc/mkinitcpio.d/linux.preset for linux).
 
 A preset is a predefined definition of how to create an initramfs image instead of specifying the configuration file and output file every time. The -p switch specifies a preset to utilize. For example, mkinitcpio -p linux selects the preset provided by the linux package.
 
-An additional configuration file is located at /etc/mkinitcpio.conf and is used to specify options global to all presets. The --allpresets switch specifies that all presets should be utilized when regenerating the initramfs after a mkinitcpio.conf change. 
+An additional configuration file is located at /etc/mkinitcpio.conf and is used to specify options global to all presets. The --allpresets switch specifies that all presets should be utilized when regenerating the initramfs after a mkinitcpio.conf change.
 
-Users may create any number of initramfs images with a variety of different configurations. The desired image must be specified in the respective boot loader configuration file. 
+Users may create any number of initramfs images with a variety of different configurations. The desired image must be specified in the respective boot loader configuration file.
 
 WARNING: Preset files are used to automatically regenerate the initramfs after a kernel update; be careful when editing them.
 
@@ -69,7 +69,7 @@ There are a couple of options [#arch_efistub_systemd]_:
 	1. Blind mount ``esp`` to ``/boot`` so that the boot manager can access the kernel and intitramfs(s) (primary and fallback).
 	2. Use a boot manager that has file system driver so that the kernel and initramfs can be accessed.
 	3. Copy boot files (kernel and initramfs) to ``esp`` and use some other mechanism (systemd event triggers, mkinitcpio hook)to keep the files up to date as kernel updates become available.
-	   
+
 For now, a method of ``mkinitcpio`` hook is used that rights the boot files directly to ``esp``.
 
 .. [#arch_mkinitcpio] https://wiki.archlinux.org/index.php/mkinitcpio
@@ -79,7 +79,7 @@ For now, a method of ``mkinitcpio`` hook is used that rights the boot files dire
 The Terminal
 ============
 
-After being frustrated with configuration of xterm looked into other terminals (urxvt, st). Ultimately settled on Termite after its high reviews, lauded as being ideal for tiling windows manager (WM) and VIM like nature. So far very happy. The config is managed via a text file and can be reloaded at runtime! All bit ++++! 
+After being frustrated with configuration of xterm looked into other terminals (urxvt, st). Ultimately settled on Termite after its high reviews, lauded as being ideal for tiling windows manager (WM) and VIM like nature. So far very happy. The config is managed via a text file and can be reloaded at runtime! All bit ++++!
 
 Slant.co has a nice comparison going on that was instrumental to discovering Termite! https://www.slant.co/versus/2445/2462/~xterm_vs_termite
 
@@ -87,9 +87,13 @@ Configuration instructions from Arch Termite page were more than enough to get s
 
 After some experimentation, settled on Inconsolata. Though there are some odd renderings in Sublime Text-3. Does not appear to be maintaining monospace. In particular, the ``y`` appears to be colapsing and ``J`` is even worse....
 
+`sudo pacman -S ttf-inconsolata`
+
+`cp /etc/xdg/termite/config ~/.config/termite/config`
+
 Python on Arch
 ==============
-If you must use pip, use a virtual environment (python -m venv) or with pip install --user to avoid conflicting with packages in /usr. It is always preferred to use pacman to install software. To help keep your system managed as intended, do not even install python-pip via pacman to minimize accidental out venv package installs. Once a python venv environment is activated (source ./bin/activate) pip will be available in the local virtualized context. 
+If you must use pip, use a virtual environment (python -m venv) or with pip install --user to avoid conflicting with packages in /usr. It is always preferred to use pacman to install software. To help keep your system managed as intended, do not even install python-pip via pacman to minimize accidental out venv package installs. Once a python venv environment is activated (source ./bin/activate) pip will be available in the local virtualized context.
 
 Manual Sections
 ===============
@@ -137,4 +141,23 @@ Device URI: hp:/usb/hp_LaserJet_1320_series?serial=00CNHC62Q0H1
 Queue name: HP_LASERJET_1320
 PPD file: lsb/usr/HP/hp-laserjet_1320-ps.ppd.gz
 Location: office
-Information: 
+Information:
+
+Arch Virtual Box Guest
+======================
+Display resolution 1920x1080
+
+On guest run `hwinfo --framebuffer` to see if the host native display resolution is available. If not, add the resulution by executing the following on the host.
+
+..code-block:: sh
+	VBoxManage setextradata "Arch" "CustomVideoMode1" "1920x1080x24"
+
+This command allows for defining up to 16 extra resolutions ("CustomVideoMode1" through "CustomVideoMode16").
+
+Restart the virtual machine and run `hwinfo --framebuffer` once more to verify that the new resolutions have been recognized by your guest.
+
+Finally, add a video=resolution kernel parameter to set the framebuffer to the new resolution, for example video=1360x768.
+
+Finally, add a video=resolution kernel parameter to set the framebuffer to the new resolution, for example video=1360x768.
+
+password kest

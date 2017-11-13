@@ -125,6 +125,8 @@
 <p>Slant.co has a nice comparison going on that was instrumental to discovering Termite! <a class="reference external" href="https://www.slant.co/versus/2445/2462/~xterm_vs_termite">https://www.slant.co/versus/2445/2462/~xterm_vs_termite</a></p>
 <p>Configuration instructions from Arch Termite page were more than enough to get started. Configured to usable point in minutes. Installed Anonymous FFT Font via pacman. See <code class="docutils literal"><span class="pre">pacman</span> <span class="pre">-Ss</span> <span class="pre">font</span></code> and <code class="docutils literal"><span class="pre">fc-list</span></code> to make obtaining and configuring fonts easier than past experiences. See also <code class="docutils literal"><span class="pre">`pacman</span> <span class="pre">-Ss</span> <span class="pre">font</span> <span class="pre">|</span> <span class="pre">grep</span> <span class="pre">-i</span> <span class="pre">mono</span> <span class="pre">-B</span> <span class="pre">1`</span></code>.</p>
 <p>After some experimentation, settled on Inconsolata. Though there are some odd renderings in Sublime Text-3. Does not appear to be maintaining monospace. In particular, the <code class="docutils literal"><span class="pre">y</span></code> appears to be colapsing and <code class="docutils literal"><span class="pre">J</span></code> is even worse….</p>
+<p><cite>sudo pacman -S ttf-inconsolata</cite></p>
+<p><cite>cp /etc/xdg/termite/config ~/.config/termite/config</cite></p>
 </div>
 <div class="section" id="python-on-arch">
 <h2>Python on Arch<a class="headerlink" href="#python-on-arch" title="Permalink to this headline">¶</a></h2>
@@ -170,6 +172,20 @@ Queue name: HP_LASERJET_1320
 PPD file: lsb/usr/HP/hp-laserjet_1320-ps.ppd.gz
 Location: office
 Information:</p>
+</div>
+<div class="section" id="arch-virtual-box-guest">
+<h2>Arch Virtual Box Guest<a class="headerlink" href="#arch-virtual-box-guest" title="Permalink to this headline">¶</a></h2>
+<p>Display resolution 1920x1080</p>
+<p>On guest run <cite>hwinfo –framebuffer</cite> to see if the host native display resolution is available. If not, add the resulution by executing the following on the host.</p>
+<dl class="docutils">
+<dt>..code-block:: sh</dt>
+<dd>VBoxManage setextradata “Arch” “CustomVideoMode1” “1920x1080x24”</dd>
+</dl>
+<p>This command allows for defining up to 16 extra resolutions (“CustomVideoMode1” through “CustomVideoMode16”).</p>
+<p>Restart the virtual machine and run <cite>hwinfo –framebuffer</cite> once more to verify that the new resolutions have been recognized by your guest.</p>
+<p>Finally, add a video=resolution kernel parameter to set the framebuffer to the new resolution, for example video=1360x768.</p>
+<p>Finally, add a video=resolution kernel parameter to set the framebuffer to the new resolution, for example video=1360x768.</p>
+<p>password kest</p>
 </div>
 </div>
 
