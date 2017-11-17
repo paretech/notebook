@@ -112,9 +112,3 @@ References
 #. http://tinyos.net/
 #. http://travisgoodspeed.blogspot.com/2011/03/goodfet-on-telosb-tmote-sky.html
 #. http://www.pages.drexel.edu/~kws23/tutorials/motes/motes.html
-
-The Next Chapter
-================
-
-1. Get to TelosB's talking with each other
-2. Write a TelosB only BSL in Python3 (not Python2).

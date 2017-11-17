@@ -2,6 +2,7 @@
 ./_sources/hackrf.rst.txt
 ./_sources/index.rst.txt
 ./_sources/keyboard.rst.txt
+./_sources/python.rst.txt
 ./_sources/sphinx.rst.txt
 ./_sources/telosb.rst.txt
 ./_static/ajax-loader.gif
@@ -32,6 +33,7 @@
 ./index.html
 ./keyboard.html
 ./objects.inv
+./python.html
 ./search.html
 ./searchindex.js
 ./sphinx.html
