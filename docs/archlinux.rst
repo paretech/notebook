@@ -126,8 +126,12 @@ UEFI Boot
 Lots has been previously led, so much so that the information should be rested and sorted. Afterall, it's hard to keep a journal in a sectioned document. Arch was initially installed using if `/sys/firmware/efi` exists, then the kernel has booted in EFI mode.
 
 
-A NEW Beginning
-===============
+PDF Viewing
+===========
+
+#. Zathura
+#. Evince
+#. 
 
 Printing
 ========
@@ -138,3 +142,9 @@ Queue name: HP_LASERJET_1320
 PPD file: lsb/usr/HP/hp-laserjet_1320-ps.ppd.gz
 Location: office
 Information: 
+
+Reading Later
+=============
+
+#. https://kyechou.github.io/blog/2017/01/26/my-i3-wm-on-archlinux/
+#. 

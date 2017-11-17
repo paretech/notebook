@@ -94,3 +94,7 @@ The Next Chapter
 
 1. Get to TelosB's talking with each other
 2. Write a TelosB only BSL in Python3 (not Python2).
+
+Making the Switch
+=================
+
