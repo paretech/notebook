@@ -15,7 +15,7 @@ MarkupSafe==1.0
 pycparser==2.18
 Pygments==2.2.0
 pytz==2017.2
-PyYAML==3.12
+PyYAML==5.4
 requests==2.18.4
 six==1.10.0
 snowballstemmer==1.2.1
